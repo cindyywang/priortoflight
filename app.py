@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 
@@ -28,72 +28,81 @@ class Item(db.Model):
     source = db.Column(db.String(500))
     last_updated = db.Column(db.DateTime, server_default=db.func.now())
 
+# 工具函数：获取当前语言
+def get_lang():
+    return request.args.get("lang", "zh")
+
 # 路由
 @app.route('/')
 def index():
-    return render_template('index.html')
+    lang = get_lang()
+    return render_template('index.html', lang=lang)
 
 @app.route('/categories')
 def categories():
+    lang = get_lang()
     categories_list = Category.query.all()
-    return render_template('categories.html', categories=categories_list)
+    return render_template('categories.html', categories=categories_list, lang=lang)
 
 @app.route('/category/<int:category_id>')
 def category_items(category_id):
+    lang = get_lang()
     category = Category.query.get_or_404(category_id)
     items = Item.query.filter_by(category_id=category_id).all()
-    return render_template('category_items.html', category=category, items=items)
+    return render_template('category_items.html', category=category, items=items, lang=lang)
 
 @app.route('/item/<int:item_id>')
 def item_detail(item_id):
+    lang = get_lang()
     item = Item.query.get_or_404(item_id)
-    return render_template('item_detail.html', item=item)
+    return render_template('item_detail.html', item=item, lang=lang)
 
 @app.route('/search')
 def search():
+    lang = get_lang()
     query = request.args.get('q', '')
     if query:
-        # 简单搜索实现 - 实际项目中可能需要更复杂的搜索逻辑
         items = Item.query.filter(
             (Item.name.contains(query)) | (Item.name_en.contains(query)) |
             (Item.description.contains(query)) | (Item.description_en.contains(query))
         ).all()
     else:
         items = []
-    return render_template('search.html', items=items, query=query)
+    return render_template('search.html', items=items, query=query, lang=lang)
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    lang = get_lang()
+    return render_template('about.html', lang=lang)
 
 # API端点
 @app.route('/api/items')
 def api_items():
+    lang = get_lang()
     items = Item.query.all()
     return jsonify([{
         'id': item.id,
-        'name': item.name,
-        'name_en': item.name_en,
+        'name': item.name_en if lang == "en" else item.name,
         'status': item.status,
-        'category': item.category.name_en
+        'category': item.category.name_en if lang == "en" else item.category.name
     } for item in items])
 
 @app.route('/api/item/<int:item_id>')
 def api_item(item_id):
+    lang = get_lang()
     item = Item.query.get_or_404(item_id)
     return jsonify({
         'id': item.id,
-        'name': item.name,
-        'name_en': item.name_en,
-        'description': item.description,
-        'description_en': item.description_en,
+        'name': item.name_en if lang == "en" else item.name,
+        'description': item.description_en if lang == "en" else item.description,
         'status': item.status,
-        'restrictions': item.restrictions,
-        'restrictions_en': item.restrictions_en,
-        'category': item.category.name_en,
+        'restrictions': item.restrictions_en if lang == "en" else item.restrictions,
+        'category': item.category.name_en if lang == "en" else item.category.name,
         'source': item.source,
         'last_updated': item.last_updated.isoformat()
     })
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+

@@ -1,1 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name if lang=='zh' else category.name_en }}{% endblock %}
+
+{% block content %}
+<h2>{{ category.name if lang=='zh' else category.name_en }}</h2>
+
+<ul>
+    {% for item in items %}
+        <li>
+            <a href="{{ url_for('item_page', item_id=item.id, lang=lang) }}">
+                {{ item.name if lang=='zh' else item.name_en }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
  

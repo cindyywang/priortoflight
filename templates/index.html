@@ -1,53 +1,84 @@
 {% extends "base.html" %}
 
+{% block title %}
+  {{ '中国入境海关指南' if lang=='zh' else 'China Customs Guide' }}
+{% endblock %}
+
 {% block content %}
 <div class="hero">
-    <h1>中国入境海关指南</h1>
-    <p>为外国游客提供准确的中国入境海关规定信息</p>
-    <a href="{{ url_for('categories') }}" class="cta-button">浏览物品分类</a>
+    <h1>{{ '中国入境海关指南' if lang=='zh' else 'China Customs Guide' }}</h1>
+    <p>
+        {% if lang=='zh' %}
+            为外国游客提供准确的中国入境海关规定信息
+        {% else %}
+            Providing accurate customs regulation info for tourists entering China
+        {% endif %}
+    </p>
+    <a href="{{ url_for('index', lang=lang) }}" class="cta-button">
+        {{ '浏览物品分类' if lang=='zh' else 'Browse Categories' }}
+    </a>
 </div>
 
 <div class="features">
     <div class="feature">
-        <h2>禁止入境物品</h2>
-        <p>了解哪些物品完全不能带入中国境内</p>
+        <h2>{{ '禁止入境物品' if lang=='zh' else 'Prohibited Items' }}</h2>
+        <p>
+            {% if lang=='zh' %}
+                了解哪些物品完全不能带入中国境内
+            {% else %}
+                Learn which items are completely banned from entering China
+            {% endif %}
+        </p>
     </div>
     <div class="feature">
-        <h2>限制入境物品</h2>
-        <p>查看需要申报或有数量限制的物品</p>
+        <h2>{{ '限制入境物品' if lang=='zh' else 'Restricted Items' }}</h2>
+        <p>
+            {% if lang=='zh' %}
+                查看需要申报或有数量限制的物品
+            {% else %}
+                See which items require declaration or have quantity limits
+            {% endif %}
+        </p>
     </div>
     <div class="feature">
-        <h2>免税物品</h2>
-        <p>了解可以免税携带入境的物品及数量</p>
+        <h2>{{ '免税物品' if lang=='zh' else 'Duty-Free Items' }}</h2>
+        <p>
+            {% if lang=='zh' %}
+                了解可以免税携带入境的物品及数量
+            {% else %}
+                Learn about items and quantities that can be brought in duty-free
+            {% endif %}
+        </p>
     </div>
 </div>
 
 <div class="quick-search">
-    <h2>快速搜索</h2>
-    <form action="{{ url_for('search') }}" method="get">
-        <input type="text" name="q" placeholder="输入物品名称，如'香烟','酒类'...">
-        <button type="submit">搜索</button>
+    <h2>{{ '快速搜索' if lang=='zh' else 'Quick Search' }}</h2>
+    <form action="{{ url_for('search', lang=lang) }}" method="get">
+        <input type="text" name="q"
+               placeholder="{{ '输入物品名称，如\'香烟\',\'酒类\'...' if lang=='zh' else 'Enter item name, e.g. Cigarettes, Alcohol...' }}">
+        <button type="submit">{{ '搜索' if lang=='zh' else 'Search' }}</button>
     </form>
 </div>
 
 <div class="popular-items">
-    <h2>常见物品查询</h2>
+    <h2>{{ '常见物品查询' if lang=='zh' else 'Popular Items' }}</h2>
     <div class="item-grid">
         <a href="#" class="item-card">
-            <h3>烟草制品</h3>
-            <p>香烟、雪茄等限制</p>
+            <h3>{{ '烟草制品' if lang=='zh' else 'Tobacco Products' }}</h3>
+            <p>{{ '香烟、雪茄等限制' if lang=='zh' else 'Restrictions on cigarettes, cigars, etc.' }}</p>
         </a>
         <a href="#" class="item-card">
-            <h3>酒精饮料</h3>
-            <p>酒类免税额度</p>
+            <h3>{{ '酒精饮料' if lang=='zh' else 'Alcoholic Beverages' }}</h3>
+            <p>{{ '酒类免税额度' if lang=='zh' else 'Duty-free allowance for alcohol' }}</p>
         </a>
         <a href="#" class="item-card">
-            <h3>现金</h3>
-            <p>货币携带规定</p>
+            <h3>{{ '现金' if lang=='zh' else 'Cash' }}</h3>
+            <p>{{ '货币携带规定' if lang=='zh' else 'Currency carrying regulations' }}</p>
         </a>
         <a href="#" class="item-card">
-            <h3>药品</h3>
-            <p>个人用药规定</p>
+            <h3>{{ '药品' if lang=='zh' else 'Medicines' }}</h3>
+            <p>{{ '个人用药规定' if lang=='zh' else 'Regulations on personal medicines' }}</p>
         </a>
     </div>
 </div>

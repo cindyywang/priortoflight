@@ -1,30 +1,44 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="{{ 'en' if lang == 'en' else 'zh' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}中国入境海关指南{% endblock %}</title>
+    <title>
+        {% if lang == 'en' %} China Customs Guide {% else %} 中国入境海关指南 {% endif %}
+    </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <header>
         <nav>
             <div class="nav-brand">
-                <a href="{{ url_for('index') }}">China Customs Guide</a>
+                <a href="{{ url_for('index', lang=lang) }}">
+                    {% if lang == 'en' %} China Customs Guide {% else %} 中国入境海关指南 {% endif %}
+                </a>
             </div>
             <ul class="nav-menu">
-                <li><a href="{{ url_for('index') }}">首页</a></li>
-                <li><a href="{{ url_for('categories') }}">物品分类</a></li>
-                <li><a href="{{ url_for('about') }}">关于我们</a></li>
+                <li><a href="{{ url_for('index', lang=lang) }}">
+                    {% if lang == 'en' %} Home {% else %} 首页 {% endif %}
+                </a></li>
+                <li><a href="{{ url_for('categories', lang=lang) }}">
+                    {% if lang == 'en' %} Categories {% else %} 物品分类 {% endif %}
+                </a></li>
+                <li><a href="{{ url_for('about', lang=lang) }}">
+                    {% if lang == 'en' %} About {% else %} 关于我们 {% endif %}
+                </a></li>
             </ul>
             <div class="nav-search">
-                <form action="{{ url_for('search') }}" method="get">
-                    <input type="text" name="q" placeholder="搜索物品...">
-                    <button type="submit">搜索</button>
+                <form action="{{ url_for('search', lang=lang) }}" method="get">
+                    <input type="hidden" name="lang" value="{{ lang }}">
+                    <input type="text" name="q" placeholder="{% if lang == 'en' %} Search items... {% else %} 搜索物品... {% endif %}">
+                    <button type="submit">{% if lang == 'en' %} Search {% else %} 搜索 {% endif %}</button>
                 </form>
             </div>
             <div class="language-switcher">
-                <a href="#" class="active">中文</a> | <a href="#">English</a>
+                <a href="{{ url_for(request.endpoint, **request.view_args, lang='zh', **request.args.to_dict(flat=True)) }}"
+                   class="{% if lang=='zh' %}active{% endif %}">中文</a> |
+                <a href="{{ url_for(request.endpoint, **request.view_args, lang='en', **request.args.to_dict(flat=True)) }}"
+                   class="{% if lang=='en' %}active{% endif %}">English</a>
             </div>
         </nav>
     </header>
@@ -35,10 +49,22 @@
 
     <footer>
         <div class="footer-content">
-            <p>&copy; 2025 中国入境海关指南. 所有权利保留.</p>
+            <p>
+                {% if lang == 'en' %}
+                    © 2025 China Customs Guide. All rights reserved.
+                {% else %}
+                    © 2025 中国入境海关指南. 所有权利保留.
+                {% endif %}
+            </p>
             <p class="disclaimer">
-                免责声明: 本网站提供的信息仅供参考，不构成法律建议。海关规定可能随时变更，
-                建议出行前通过<a href="http://www.customs.gov.cn/" target="_blank">中国海关总署官方网站</a>再次确认。
+                {% if lang == 'en' %}
+                    Disclaimer: Information is for reference only and does not constitute legal advice.
+                    Customs regulations may change anytime. Please confirm again at the
+                    <a href="http://www.customs.gov.cn/" target="_blank">official China Customs website</a>.
+                {% else %}
+                    免责声明: 本网站提供的信息仅供参考，不构成法律建议。海关规定可能随时变更，
+                    建议出行前通过<a href="http://www.customs.gov.cn/" target="_blank">中国海关总署官方网站</a>再次确认。
+                {% endif %}
             </p>
         </div>
     </footer>

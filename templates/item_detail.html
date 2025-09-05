@@ -1,1 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ item.name if lang=='zh' else item.name_en }}{% endblock %}
+
+{% block content %}
+<h2>{{ item.name if lang=='zh' else item.name_en }}</h2>
+<p>{{ item.description if lang=='zh' else item.description_en }}</p>
+
+<h3>{{ '相关规定' if lang=='zh' else 'Related Regulations' }}</h3>
+<ul>
+    {% for reg in regulations %}
+        <li>{{ reg.text if lang=='zh' else reg.text_en }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
  

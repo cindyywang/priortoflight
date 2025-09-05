@@ -35,10 +35,14 @@
                 </form>
             </div>
             <div class="language-switcher">
-                <a href="{{ url_for(request.endpoint, **request.view_args, lang='zh', **request.args.to_dict(flat=True)) }}"
-                   class="{% if lang=='zh' %}active{% endif %}">中文</a> |
-                <a href="{{ url_for(request.endpoint, **request.view_args, lang='en', **request.args.to_dict(flat=True)) }}"
-                   class="{% if lang=='en' %}active{% endif %}">English</a>
+                {% set args = request.view_args.copy() %}
+                {% for k, v in request.args.items() %}
+                {% set _ = args.update({k: v}) %}
+                {% endfor %}
+                <a href="{{ url_for(request.endpoint, **args, lang='zh') }}"
+                class="{% if lang=='zh' %}active{% endif %}">中文</a> |
+                <a href="{{ url_for(request.endpoint, **args, lang='en') }}"
+                class="{% if lang=='en' %}active{% endif %}">English</a>
             </div>
         </nav>
     </header>

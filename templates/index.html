@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>中国入境海关指南</h1>
+    <p>为外国游客提供准确的中国入境海关规定信息</p>
+    <a href="{{ url_for('categories') }}" class="cta-button">浏览物品分类</a>
+</div>
+
+<div class="features">
+    <div class="feature">
+        <h2>禁止入境物品</h2>
+        <p>了解哪些物品完全不能带入中国境内</p>
+    </div>
+    <div class="feature">
+        <h2>限制入境物品</h2>
+        <p>查看需要申报或有数量限制的物品</p>
+    </div>
+    <div class="feature">
+        <h2>免税物品</h2>
+        <p>了解可以免税携带入境的物品及数量</p>
+    </div>
+</div>
+
+<div class="quick-search">
+    <h2>快速搜索</h2>
+    <form action="{{ url_for('search') }}" method="get">
+        <input type="text" name="q" placeholder="输入物品名称，如'香烟','酒类'...">
+        <button type="submit">搜索</button>
+    </form>
+</div>
+
+<div class="popular-items">
+    <h2>常见物品查询</h2>
+    <div class="item-grid">
+        <a href="#" class="item-card">
+            <h3>烟草制品</h3>
+            <p>香烟、雪茄等限制</p>
+        </a>
+        <a href="#" class="item-card">
+            <h3>酒精饮料</h3>
+            <p>酒类免税额度</p>
+        </a>
+        <a href="#" class="item-card">
+            <h3>现金</h3>
+            <p>货币携带规定</p>
+        </a>
+        <a href="#" class="item-card">
+            <h3>药品</h3>
+            <p>个人用药规定</p>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,243 @@
+/* 基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* 导航栏 */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-brand a {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #d93025;
+    text-decoration: none;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+}
+
+.nav-menu li {
+    margin: 0 1rem;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.nav-search input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.nav-search button {
+    padding: 0.5rem 1rem;
+    background-color: #d93025;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.language-switcher a {
+    text-decoration: none;
+    color: #666;
+}
+
+.language-switcher a.active {
+    color: #d93025;
+    font-weight: bold;
+}
+
+/* 主内容区 */
+main {
+    min-height: calc(100vh - 200px);
+    padding: 2rem 5%;
+}
+
+/* 英雄区域 */
+.hero {
+    text-align: center;
+    padding: 3rem 0;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 3rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #d93025;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #666;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background-color: #d93025;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* 特性区域 */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.feature {
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.feature h2 {
+    color: #d93025;
+    margin-bottom: 1rem;
+}
+
+/* 快速搜索 */
+.quick-search {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.quick-search h2 {
+    margin-bottom: 1rem;
+}
+
+.quick-search input {
+    padding: 0.8rem;
+    width: 50%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+}
+
+.quick-search button {
+    padding: 0.8rem 1.5rem;
+    background-color: #d93025;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 热门物品 */
+.popular-items {
+    margin-bottom: 3rem;
+}
+
+.popular-items h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.item-card {
+    display: block;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.item-card h3 {
+    color: #d93025;
+    margin-bottom: 0.5rem;
+}
+
+/* 页脚 */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 2rem 5%;
+    text-align: center;
+}
+
+.footer-content p {
+    margin-bottom: 1rem;
+}
+
+.disclaimer {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.disclaimer a {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .nav-menu {
+        margin: 1rem 0;
+    }
+    
+    .nav-search {
+        width: 100%;
+        margin: 1rem 0;
+    }
+    
+    .nav-search input {
+        width: 70%;
+    }
+    
+    .quick-search input {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+}

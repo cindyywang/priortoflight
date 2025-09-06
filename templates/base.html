@@ -39,9 +39,9 @@
                 {% for k, v in request.args.items() %}
                 {% set _ = args.update({k: v}) %}
                 {% endfor %}
-                <a href="{{ url_for(request.endpoint, **args, lang='zh') }}"
+                <a href="{{ url_for(request.endpoint, **dict(args, lang='zh')) }}"
                 class="{% if lang=='zh' %}active{% endif %}">中文</a> |
-                <a href="{{ url_for(request.endpoint, **args, lang='en') }}"
+                <a href="{{ url_for(request.endpoint, **dict(args, lang='en')) }}"
                 class="{% if lang=='en' %}active{% endif %}">English</a>
             </div>
         </nav>

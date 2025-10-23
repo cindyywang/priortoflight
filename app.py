@@ -1,10 +1,19 @@
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify, url_for, abort
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
+import re
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+
+# Limit each IP to 60 requests per minute
+limiter = Limiter(get_remote_address, app=app, default_limits=["60 per minute"])
+
+# Simple bot blacklist
+BAD_BOTS = ["curl", "python", "scrapy", "spider", "bot"]
 
 # 数据模型
 class Category(db.Model):
@@ -101,6 +110,37 @@ def api_item(item_id):
         'source': item.source,
         'last_updated': item.last_updated.isoformat()
     })
+
+@app.before_request
+def block_bots():
+    ua = request.headers.get("User-Agent", "").lower()
+    if any(b in ua for b in BAD_BOTS):
+        abort(403)
+
+# Optional JS challenge check
+@app.before_request
+def js_check():
+    token = request.cookies.get("js_challenge")
+    if not token and "text/html" in request.headers.get("Accept", ""):
+        # serve a small JS snippet first
+        return """
+        <script>
+        document.cookie = "js_challenge=1; path=/";
+        location.reload();
+        </script>
+        """, 200, {"Content-Type": "text/html"}
+
+@app.after_request
+def log_requests(response):
+    ip = request.remote_addr
+    ua = request.headers.get("User-Agent", "")
+    with open("access_log.txt", "a") as f:
+        f.write(f"{ip}\t{ua}\n")
+    return response
+
+@app.route('/')
+def home():
+    return "Welcome to Prior to Flight!"
 
 if __name__ == '__main__':
     app.run(debug=True)

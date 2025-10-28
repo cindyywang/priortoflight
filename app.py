@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, jsonify, url_for, abort
+from flask import Flask, render_template, request, jsonify, url_for, abort, current_app
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 import re
+import click
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -40,6 +41,29 @@ class Item(db.Model):
 # 工具函数：获取当前语言
 def get_lang():
     return request.args.get("lang", "zh")
+
+# Add this function to your app.py
+
+def init_db():
+    db = get_db()
+
+    # Opens and reads the schema.sql file
+    with current_app.open_resource('schema.sql') as f:
+        # Executes the SQL commands to create the tables
+        db.executescript(f.read().decode('utf8'))
+
+# --- END of init_db() ---
+
+# Add this function to your app.py
+
+def init_app(app):
+    # Closes the database connection after the app context ends
+    app.teardown_appcontext(close_db)
+
+    # Registers the 'init-db' command with the application
+    app.cli.add_command(init_db_command)
+
+# --- END of init_app() ---
 
 # 路由
 @app.route('/')
@@ -142,7 +166,22 @@ def log_requests(response):
 def home():
     return "Welcome to Prior to Flight!"
 
+# Add this function to your app.py
+
+import click
+from flask import current_app
+# ... (ensure these imports are at the top)
+
+@click.command('init-db')
+def init_db_command():
+    """Clear the existing data and create new tables."""
+    init_db()
+    click.echo('Initialized the database.')
+
+# --- END of init_db_command() ---
+
 if __name__ == '__main__':
+    init_app(app)
     app.run(debug=True)
 
 

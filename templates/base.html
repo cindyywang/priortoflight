@@ -7,6 +7,34 @@
         {% if lang == 'en' %} China Customs Guide {% else %} 中国入境海关指南 {% endif %}
     </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- 🔒 Copy protection -->
+    <style>
+        /* Prevent text selection and copying */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <script>
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable common copy / inspect / view-source shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (
+                (e.ctrlKey && ['c', 'u', 's', 'a', 'x'].includes(e.key.toLowerCase())) || // copy, view source, save, select all, cut
+                (e.ctrlKey && e.shiftKey && ['i', 'j'].includes(e.key.toLowerCase())) || // inspect element
+                (e.key === 'F12') // DevTools shortcut
+            ) {
+                e.preventDefault();
+            }
+        });
+        // disable dragging of images
+        document.addEventListener('dragstart', event => event.preventDefault());
+    </script>
+
 </head>
 <body>
     <header>

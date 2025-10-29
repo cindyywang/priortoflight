@@ -168,10 +168,6 @@ def home():
 
 # Add this function to your app.py
 
-import click
-from flask import current_app
-# ... (ensure these imports are at the top)
-
 @click.command('init-db')
 def init_db_command():
     """Clear the existing data and create new tables."""

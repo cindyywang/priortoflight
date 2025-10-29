@@ -6,6 +6,7 @@ from config import Config
 import re
 import click
 import sqlite3
+import os
 
 app = Flask(__name__)
 app.config.from_object(Config)

@@ -59,9 +59,6 @@ def init_db():
         engine.execute(f.read().decode('utf8'))
 
 def init_app(app):
-    # Closes the database connection after the app context ends
-    app.teardown_appcontext(close_db)
-
     # Registers the 'init-db' command with the application
     app.cli.add_command(init_db_command)
 

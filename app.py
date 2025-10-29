@@ -69,10 +69,12 @@ def init_db():
         # 3. Read the schema file
         with current_app.open_resource('schema.sql') as f:
             sql_script = f.read().decode('utf8')
-            # 4. Execute the SQL script on the connection object
-            #    (Note: The method name is now just 'execute' on the connection,
-            #     and we pass the SQL as a string)
-            connection.exec_driver_sql(sql_script)
+            # 💡 New Logic: Split the script into individual statements
+            statements = [s.strip() for s in sql_script.split(';') if s.strip()]
+
+            for statement in statements:
+                # Execute each CREATE TABLE statement individually
+                connection.exec_driver_sql(statement)
 
         # 5. Commit the changes to the database
         connection.commit()

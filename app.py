@@ -64,9 +64,18 @@ def init_db():
     # You will need to execute the raw schema directly since you're not defining models yet
     # To do this safely with SQLAlchemy, we get the engine connection:
     engine = db.engine
-    with current_app.open_resource('schema.sql') as f:
-        # Executes the raw SQL from schema.sql
-        engine.execute(f.read().decode('utf8'))
+    # 2. Use a context manager to open a connection
+    with engine.connect() as connection:
+        # 3. Read the schema file
+        with current_app.open_resource('schema.sql') as f:
+            sql_script = f.read().decode('utf8')
+            # 4. Execute the SQL script on the connection object
+            #    (Note: The method name is now just 'execute' on the connection,
+            #     and we pass the SQL as a string)
+            connection.exec_driver_sql(sql_script)
+
+        # 5. Commit the changes to the database
+        connection.commit()
 
 def init_app(app):
     # Registers the 'init-db' command with the application

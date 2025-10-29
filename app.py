@@ -3,20 +3,19 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
-from app import db
 import re
 import click
 import sqlite3
 import os
 
-app = Flask(__name__)
-app.config.from_object(Config)
-# You would do this ONLY if it's not in the Config class:
-app.config.from_mapping(
-    SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(os.getcwd(), 'app.db'),
-    SQLALCHEMY_TRACK_MODIFICATIONS=False
-)
-db = SQLAlchemy(app)
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+class Config:
+    # Define the DB path here:
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+db = SQLAlchemy()
 
 # Limit each IP to 60 requests per minute
 limiter = Limiter(get_remote_address, app=app, default_limits=["60 per minute"])
@@ -69,6 +68,21 @@ def init_app(app):
     app.cli.add_command(init_db_command)
 
 # --- END of init_app() ---
+
+# 2. Define the application factory function (standard Flask pattern)
+def create_app(config_class=Config): # You may have this already, if not, create it
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    # 3. Initialize the db object here, INSIDE the function
+    db.init_app(app)
+
+    # 4. Define or register your database initialization command here
+    init_app(app) # You defined this to register the command
+
+    # ... other routes/blueprints ...
+
+    return app
 
 # 路由
 @app.route('/')
@@ -181,8 +195,9 @@ def init_db_command():
 
 # --- END of init_db_command() ---
 
+app = create_app()
+
 if __name__ == '__main__':
-    init_app(app)
     app.run(debug=True)
 
 

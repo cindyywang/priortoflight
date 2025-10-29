@@ -17,6 +17,8 @@ class Config:
 
 db = SQLAlchemy()
 
+app = create_app()
+
 # Limit each IP to 60 requests per minute
 limiter = Limiter(get_remote_address, app=app, default_limits=["60 per minute"])
 
@@ -194,8 +196,6 @@ def init_db_command():
     click.echo('Initialized the database.')
 
 # --- END of init_db_command() ---
-
-app = create_app()
 
 if __name__ == '__main__':
     app.run(debug=True)

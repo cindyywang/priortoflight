@@ -1,13 +1,19 @@
-from flask import Flask, render_template, request, jsonify, url_for, abort, current_app
+from flask import Flask, render_template, request, jsonify, url_for, abort, current_app, g
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 import re
 import click
+import sqlite3
 
 app = Flask(__name__)
 app.config.from_object(Config)
+# You would do this ONLY if it's not in the Config class:
+app.config.from_mapping(
+    SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(os.getcwd(), 'app.db'),
+    SQLALCHEMY_TRACK_MODIFICATIONS=False
+)
 db = SQLAlchemy(app)
 
 # Limit each IP to 60 requests per minute
@@ -41,6 +47,30 @@ class Item(db.Model):
 # 工具函数：获取当前语言
 def get_lang():
     return request.args.get("lang", "zh")
+
+# --- Database Connection Functions ---
+
+def get_db():
+    # g is a special object unique to each request.
+    # If the database connection 'db' isn't in g, create it.
+    if 'db' not in g:
+        g.db = sqlite3.connect(
+            current_app.config['DATABASE'],
+            detect_types=sqlite3.PARSE_DECLTYPES
+        )
+        # Use sqlite3.Row to access columns by name (e.g., item['name_en'])
+        g.db.row_factory = sqlite3.Row
+    return g.db
+
+def close_db(e=None):
+    # Retrieve the connection object if it exists in g
+    db = g.pop('db', None)
+
+    # If the connection exists, close it
+    if db is not None:
+        db.close()
+
+# --- End of Connection Functions ---
 
 # Add this function to your app.py
 

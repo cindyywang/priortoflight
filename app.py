@@ -17,10 +17,6 @@ class Config:
 
 db = SQLAlchemy()
 
-app = create_app()
-
-# Limit each IP to 60 requests per minute
-limiter = Limiter(get_remote_address, app=app, default_limits=["60 per minute"])
 
 # Simple bot blacklist
 BAD_BOTS = ["curl", "python", "scrapy", "spider", "bot"]
@@ -85,6 +81,11 @@ def create_app(config_class=Config): # You may have this already, if not, create
     # ... other routes/blueprints ...
 
     return app
+
+app = create_app()
+
+# Limit each IP to 60 requests per minute
+limiter = Limiter(get_remote_address, app=app, default_limits=["60 per minute"])
 
 # 路由
 @app.route('/')

@@ -3,6 +3,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
+from app import db
 import re
 import click
 import sqlite3
@@ -49,43 +50,16 @@ class Item(db.Model):
 def get_lang():
     return request.args.get("lang", "zh")
 
-# --- Database Connection Functions ---
-
-def get_db():
-    # g is a special object unique to each request.
-    # If the database connection 'db' isn't in g, create it.
-    if 'db' not in g:
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        # Use sqlite3.Row to access columns by name (e.g., item['name_en'])
-        g.db.row_factory = sqlite3.Row
-    return g.db
-
-def close_db(e=None):
-    # Retrieve the connection object if it exists in g
-    db = g.pop('db', None)
-
-    # If the connection exists, close it
-    if db is not None:
-        db.close()
-
-# --- End of Connection Functions ---
-
-# Add this function to your app.py
-
 def init_db():
-    db = get_db()
+    # This command creates all tables defined in your SQLAlchemy models (if you had models)
+    # OR, for raw SQL schema:
 
-    # Opens and reads the schema.sql file
+    # You will need to execute the raw schema directly since you're not defining models yet
+    # To do this safely with SQLAlchemy, we get the engine connection:
+    engine = db.engine
     with current_app.open_resource('schema.sql') as f:
-        # Executes the SQL commands to create the tables
-        db.executescript(f.read().decode('utf8'))
-
-# --- END of init_db() ---
-
-# Add this function to your app.py
+        # Executes the raw SQL from schema.sql
+        engine.execute(f.read().decode('utf8'))
 
 def init_app(app):
     # Closes the database connection after the app context ends

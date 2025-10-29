@@ -47,6 +47,16 @@ class Item(db.Model):
 def get_lang():
     return request.args.get("lang", "zh")
 
+# Add this function to your app.py
+
+@click.command('init-db')
+def init_db_command():
+    """Clear the existing data and create new tables."""
+    init_db()
+    click.echo('Initialized the database.')
+
+# --- END of init_db_command() ---
+
 def init_db():
     # This command creates all tables defined in your SQLAlchemy models (if you had models)
     # OR, for raw SQL schema:
@@ -184,16 +194,6 @@ def log_requests(response):
 @app.route('/')
 def home():
     return "Welcome to Prior to Flight!"
-
-# Add this function to your app.py
-
-@click.command('init-db')
-def init_db_command():
-    """Clear the existing data and create new tables."""
-    init_db()
-    click.echo('Initialized the database.')
-
-# --- END of init_db_command() ---
 
 if __name__ == '__main__':
     app.run(debug=True)

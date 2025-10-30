@@ -154,6 +154,10 @@ def search():
     lang = get_lang()
     query = request.args.get('q', '')
     if query:
+        # 🌟 Define search_term ONLY IF q EXISTS 🌟
+        # Use LIKE with % wildcards for searching
+        search_term = f'%{q}%'
+        # Now run the database query
         items = db.session.execute(
             text("""
                 SELECT * FROM Item

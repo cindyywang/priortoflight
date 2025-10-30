@@ -116,7 +116,9 @@ def index():
 @app.route('/categories')
 def categories():
     lang = get_lang()
-    categories_list = Category.query.all()
+    categories_list = db.session.execute(
+        text("SELECT * FROM Category")
+    ).mappings().fetchall()
     return render_template('categories.html', categories=categories_list, lang=lang)
 
 @app.route('/category/<int:category_id>')
@@ -133,13 +135,13 @@ def item_detail(item_id):
     category = db.session.execute(
         text("SELECT * FROM Category WHERE id = :id"),
         {"id": category_id}
-    ).fetchone() # Use fetchone() for a single result
+    ).mappings().fetchone() # Use fetchone() for a single result
 
     # 2. Fetch the list of item OBJECTS for that category
     items_list = db.session.execute(
         text("SELECT * FROM Item WHERE category_id = :id"),
         {"id": category_id}
-    ).fetchall() # Use fetchall() for multiple results
+    ).mappings().fetchall() # Use fetchall() for multiple results
 
     # 3. Pass BOTH to the template
     return render_template(
@@ -164,7 +166,7 @@ def search():
                 WHERE name LIKE :term OR name_en LIKE :term
             """),
             {"term": search_term}
-        ).fetchall()
+        ).mappings().fetchall()
     else:
         items = []
     return render_template('search.html', items=items, query=query, lang=lang)

@@ -3,10 +3,13 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
+from sqlalchemy import text # (or your SQLAlchemy methods)
+from . import db # import the global db object
 import re
 import click
 import sqlite3
 import os
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -127,18 +130,38 @@ def category_items(category_id):
 @app.route('/item/<int:item_id>')
 def item_detail(item_id):
     lang = get_lang()
-    item = Item.query.get_or_404(item_id)
-    return render_template('item_detail.html', item=item, lang=lang)
+    # 1. Fetch the single category OBJECT
+    category = db.session.execute(
+        text("SELECT * FROM Category WHERE id = :id"),
+        {"id": category_id}
+    ).fetchone() # Use fetchone() for a single result
+
+    # 2. Fetch the list of item OBJECTS for that category
+    items_list = db.session.execute(
+        text("SELECT * FROM Item WHERE category_id = :id"),
+        {"id": category_id}
+    ).fetchall() # Use fetchall() for multiple results
+
+    # 3. Pass BOTH to the template
+    return render_template(
+        'categories.html',
+        category=category, # <<< MUST be passed here
+        items=items_list,
+        lang=lang
+    )
 
 @app.route('/search')
 def search():
     lang = get_lang()
     query = request.args.get('q', '')
     if query:
-        items = Item.query.filter(
-            (Item.name.contains(query)) | (Item.name_en.contains(query)) |
-            (Item.description.contains(query)) | (Item.description_en.contains(query))
-        ).all()
+        items = db.session.execute(
+            text("""
+                SELECT * FROM Item
+                WHERE name LIKE :term OR name_en LIKE :term
+            """),
+            {"term": search_term}
+        ).fetchall()
     else:
         items = []
     return render_template('search.html', items=items, query=query, lang=lang)

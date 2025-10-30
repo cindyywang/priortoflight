@@ -158,7 +158,7 @@ def search():
     if query:
         # 🌟 Define search_term ONLY IF q EXISTS 🌟
         # Use LIKE with % wildcards for searching
-        search_term = f'%{q}%'
+        search_term = f'%{query}%'
         # Now run the database query
         items = db.session.execute(
             text("""

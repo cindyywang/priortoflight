@@ -124,9 +124,25 @@ def categories():
 @app.route('/category/<int:category_id>')
 def category_items(category_id):
     lang = get_lang()
-    category = Category.query.get_or_404(category_id)
-    items = Item.query.filter_by(category_id=category_id).all()
-    return render_template('category_items.html', category=category, items=items, lang=lang)
+    # 1. Fetch the SINGLE category object
+    category = db.session.execute(
+        text("SELECT * FROM Category WHERE id = :id"),
+        {"id": category_id}
+    ).mappings().fetchone() # Use fetchone() for a single result
+
+    # 2. Fetch the LIST of items for that category
+    items_list = db.session.execute(
+        text("SELECT * FROM Item WHERE :_id = :id"),
+        {"id": category_id}
+    ).mappings().fetchall() # Use fetchall() for multiple results
+
+    # 3. 🌟 CRITICAL FIX: Pass BOTH 'category=category' AND 'items=items_list'
+    return render_template(
+        'categories.html',
+        category=category,
+        items=items_list,
+        lang=lang
+    )
 
 @app.route('/item/<int:item_id>')
 def item_detail(item_id):

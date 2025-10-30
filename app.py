@@ -4,7 +4,7 @@ from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from sqlalchemy import text # (or your SQLAlchemy methods)
-from . import db # import the global db object
+from app import db # import the global db object
 import re
 import click
 import sqlite3

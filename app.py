@@ -111,7 +111,17 @@ limiter = Limiter(get_remote_address, app=app, default_limits=["60 per minute"])
 @app.route('/')
 def index():
     lang = get_lang()
-    return render_template('index.html', lang=lang)
+    # 🌟 1. FIX: You must fetch the data for the homepage 🌟
+    # This query fetches the 4 items you want to display
+    popular_items = db.session.execute(
+        text("SELECT * FROM Item WHERE id IN (27, 27, 29, 23)")
+    ).mappings().fetchall()
+    # 🌟 2. FIX: Pass 'popular_items' to the template 🌟
+    return render_template(
+        'index.html',
+        lang=lang,
+        popular_items=popular_items
+    )
 
 @app.route('/categories')
 def categories():

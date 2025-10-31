@@ -119,7 +119,7 @@ def categories():
     categories_list = db.session.execute(
         text("SELECT * FROM Category")
     ).mappings().fetchall()
-    return render_template('categories.html', categories=categories_list, lang=lang)
+    return render_template('call_categories.html', categories=categories_list, lang=lang)
 
 @app.route('/category/<int:category_id>')
 def category_items(category_id):
@@ -170,7 +170,8 @@ def item_detail(item_id):
 @app.route('/search')
 def search():
     lang = get_lang()
-    query = request.args.get('q', '')
+    query = request.args.get('q', '').strip()
+    items = []
     if query:
         # 🌟 Define search_term ONLY IF q EXISTS 🌟
         # Use LIKE with % wildcards for searching
@@ -179,12 +180,10 @@ def search():
         items = db.session.execute(
             text("""
                 SELECT * FROM Item
-                WHERE name LIKE :term OR name_en LIKE :term
+                WHERE name LIKE :term OR name_en LIKE :term COLLATE NOCASE
             """),
             {"term": search_term}
         ).mappings().fetchall()
-    else:
-        items = []
     return render_template('search.html', items=items, query=query, lang=lang)
 
 @app.route('/about')

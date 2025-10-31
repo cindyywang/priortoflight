@@ -14,7 +14,7 @@
             Providing accurate customs regulation info for tourists entering China
         {% endif %}
     </p>
-    <a href="{{ url_for('index', lang=lang) }}" class="cta-button">
+    <a href="{{ url_for('categories', lang=lang) }}" class="cta-button">
         {{ '浏览物品分类' if lang=='zh' else 'Browse Categories' }}
     </a>
 </div>
@@ -64,19 +64,19 @@
 <div class="popular-items">
     <h2>{{ '常见物品查询' if lang=='zh' else 'Popular Items' }}</h2>
     <div class="item-grid">
-        <a href="#" class="item-card">
+        <a href="{{ url_for('item_page', item_id=item.id, lang=lang) }}" class="item-card">
             <h3>{{ '烟草制品' if lang=='zh' else 'Tobacco Products' }}</h3>
             <p>{{ '香烟、雪茄等限制' if lang=='zh' else 'Restrictions on cigarettes, cigars, etc.' }}</p>
         </a>
-        <a href="#" class="item-card">
+        <a href="{{ url_for('item_page', item_id=item.id, lang=lang) }}" class="item-card">
             <h3>{{ '酒精饮料' if lang=='zh' else 'Alcoholic Beverages' }}</h3>
             <p>{{ '酒类免税额度' if lang=='zh' else 'Duty-free allowance for alcohol' }}</p>
         </a>
-        <a href="#" class="item-card">
+        <a href="{{ url_for('item_page', item_id=item.id, lang=lang) }}" class="item-card">
             <h3>{{ '现金' if lang=='zh' else 'Cash' }}</h3>
             <p>{{ '货币携带规定' if lang=='zh' else 'Currency carrying regulations' }}</p>
         </a>
-        <a href="#" class="item-card">
+        <a href="{{ url_for('item_page', item_id=item.id, lang=lang) }}" class="item-card">
             <h3>{{ '药品' if lang=='zh' else 'Medicines' }}</h3>
             <p>{{ '个人用药规定' if lang=='zh' else 'Regulations on personal medicines' }}</p>
         </a>

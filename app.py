@@ -129,7 +129,7 @@ def categories():
     categories_list = db.session.execute(
         text("SELECT * FROM Category")
     ).mappings().fetchall()
-    return render_template('call_categories.html', categories=categories_list, lang=lang)
+    return render_template('all_categories.html', categories=categories_list, lang=lang)
 
 @app.route('/category/<int:category_id>')
 def category_items(category_id):

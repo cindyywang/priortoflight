@@ -155,27 +155,20 @@ def category_items(category_id):
     )
 
 @app.route('/item/<int:item_id>')
-def item_detail(item_id):
+def item_detail(item_id):# <-- Note: function name matches url_for
     lang = get_lang()
-    # 1. Fetch the single category OBJECT
-    category = db.session.execute(
-        text("SELECT * FROM Category WHERE id = :id"),
-        {"id": category_id}
-    ).mappings().fetchone() # Use fetchone() for a single result
+    # 1. Fetch the SINGLE item from the database using item_id
+    item = db.session.execute(
+        text("SELECT * FROM Item WHERE id = :id"),
+        {"id": item_id}
+    ).mappings().fetchone() # Use fetchone() for a single item
 
-    # 2. Fetch the list of item OBJECTS for that category
-    items_list = db.session.execute(
-        text("SELECT * FROM Item WHERE category_id = :id"),
-        {"id": category_id}
-    ).mappings().fetchall() # Use fetchall() for multiple results
+    if item is None:
+        # Handle cases where the item ID doesn't exist
+        return "Item not found", 404
 
-    # 3. Pass BOTH to the template
-    return render_template(
-        'categories.html',
-        category=category, # <<< MUST be passed here
-        items=items_list,
-        lang=lang
-    )
+    # 2. Render the 'item.html' template (which you should have created)
+    return render_template('item.html', item=item, lang=lang)
 
 @app.route('/search')
 def search():

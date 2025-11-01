@@ -132,7 +132,7 @@ def categories():
     return render_template('all_categories.html', categories=categories_list, lang=lang)
 
 @app.route('/category/<int:category_id>')
-def category_items(category_id):
+def category_page(category_id):
     lang = get_lang()
     # 1. Fetch the SINGLE category object
     category = db.session.execute(

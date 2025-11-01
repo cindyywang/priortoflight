@@ -168,7 +168,7 @@ def item_detail(item_id):# <-- Note: function name matches url_for
         return "Item not found", 404
 
     # 2. Render the 'item.html' template (which you should have created)
-    return render_template('item.html', item=item, lang=lang)
+    return render_template('item_detail.html', item=item, lang=lang)
 
 @app.route('/search')
 def search():

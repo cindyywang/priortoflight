@@ -7,7 +7,7 @@
     <ul class="list-group">
         {% for category in categories %}
             <li class="list-group-item">
-                <a href="{{ url_for('category_page', category_id=category.id, lang=lang) }}">
+                <a href="{{ url_for('category_items', category_id=category.id, lang=lang) }}">
                     {{ category.name if lang=='zh' else category.name_en }}
                 </a>
             </li>

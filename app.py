@@ -192,7 +192,7 @@ def search():
                   WHERE
                   name LIKE :term OR
                   name_en LIKE :term COLLATE NOCASE OR
-                  rrestrictions LIKE :term OR  {# <-- CHANGE: Use restrictions #}
+                  restrictions LIKE :term OR  {# <-- CHANGE: Use restrictions #}
                   restrictions_en LIKE :term COLLATE NOCASE {# <-- CHANGE: Use restrictions_en #}
                 """),
             {"term": search_term}

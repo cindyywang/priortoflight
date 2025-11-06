@@ -1,15 +1,58 @@
 {% extends "base.html" %}
+
+{# Use the item's name for the page title #}
 {% block title %}{{ item.name if lang=='zh' else item.name_en }}{% endblock %}
 
 {% block content %}
-<h2>{{ item.name if lang=='zh' else item.name_en }}</h2>
-<p>{{ item.description if lang=='zh' else item.description_en }}</p>
+<div class="container mt-5">
 
-<h3>{{ '相关规定' if lang=='zh' else 'Related Regulations' }}</h3>
-<ul>
-    {% for reg in regulations %}
-        <li>{{ reg.text if lang=='zh' else reg.text_en }}</li>
-    {% endfor %}
-</ul>
+    <h1 class="mb-3">
+        {{ item.name if lang=='zh' else item.name_en }}
+        <span class="badge
+            {% if item.status == 'Prohibited' %}bg-danger
+            {% elif item.status == 'Restricted' %}bg-warning text-dark
+            {% else %}bg-secondary
+            {% endif %}">
+            {{ item.status if lang=='zh' else item.status_en }}
+        </span>
+    </h1>
+
+    <p class="text-muted">
+        {% if lang=='zh' %}
+            **类别**: {{ category.name }} | **来源**: {{ item.source }}
+        {% else %}
+            **Category**: {{ category.name_en }} | **Source**: {{ item.source }}
+        {% endif %}
+    </p>
+
+    <hr>
+
+    <h3>{{ '描述' if lang=='zh' else 'Description' }}</h3>
+    <p class="lead">{{ item.description if lang=='zh' else item.description_en }}</p>
+
+    {% if item.restrictions or item.restrictions_en %}
+    <div class="card border-info mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">{{ '特别限制/例外' if lang=='zh' else 'Specific Restrictions/Exceptions' }}</h5>
+        </div>
+        <div class="card-body">
+            <p>{{ item.restrictions if lang=='zh' else item.restrictions_en }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if regulations %}
+    <h3>{{ '相关规定' if lang=='zh' else 'Related Regulations' }}</h3>
+    <ul class="list-group mb-4">
+        {% for reg in regulations %}
+            <li class="list-group-item">{{ reg.text if lang=='zh' else reg.text_en }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <p class="text-end text-muted small">
+        {{ '最后更新' if lang=='zh' else 'Last Updated' }}: {{ item.last_updated or ('N/A' if lang=='zh' else 'N/A') }}
+    </p>
+
+</div>
 {% endblock %}
- 

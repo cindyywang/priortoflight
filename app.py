@@ -167,8 +167,14 @@ def item_detail(item_id):# <-- Note: function name matches url_for
         # Handle cases where the item ID doesn't exist
         return "Item not found", 404
 
-    # 2. Render the 'item.html' template (which you should have created)
-    return render_template('item_detail.html', item=item, lang=lang)
+    # 2. 🌟 NEW: Fetch the Category related to this item 🌟
+    category = db.session.execute(
+        text("SELECT * FROM Category WHERE id = :cat_id"),
+        {"cat_id": item['category_id']}  # Use the category_id from the fetched item
+    ).mappings().fetchone()
+
+    # 3. Render the template, passing BOTH item AND category
+    return render_template('item_detail.html', item=item, category=category, lang=lang)
 
 @app.route('/search')
 def search():
@@ -182,9 +188,13 @@ def search():
         # Now run the database query
         items = db.session.execute(
             text("""
-                SELECT * FROM Item
-                WHERE name LIKE :term OR name_en LIKE :term COLLATE NOCASE
-            """),
+                  SELECT * FROM Item
+                  WHERE
+                  name LIKE :term OR
+                  name_en LIKE :term COLLATE NOCASE OR
+                  regulation LIKE :term OR
+                  regulation_en LIKE :term COLLATE NOCASE
+                """),
             {"term": search_term}
         ).mappings().fetchall()
     return render_template('search.html', items=items, query=query, lang=lang)

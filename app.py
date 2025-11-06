@@ -142,7 +142,7 @@ def category_page(category_id):
 
     # 2. Fetch the LIST of items for that category
     items_list = db.session.execute(
-        text("SELECT * FROM Item WHERE :_id = :id"),
+        text("SELECT * FROM Item WHERE category_id = :id"),
         {"id": category_id}
     ).mappings().fetchall() # Use fetchall() for multiple results
 

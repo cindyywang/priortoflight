@@ -1,1 +1,38 @@
- 
+{% extends "base.html" %}
+{% block title %}Search Results for "{{ query }}"{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">
+        {% if lang == 'zh' %}搜索结果{% else %}Search Results{% endif %}
+        : **"{{ query }}"**
+    </h1>
+
+    {% if items %}
+        <p class="lead">
+            {% if lang == 'zh' %}找到 {{ items|length }} 条结果。{% else %}Found {{ items|length }} results.{% endif %}
+        </p>
+
+        <ul class="list-group">
+            {% for item in items %}
+            <li class="list-group-item">
+                <a href="{{ url_for('item_detail', item_id=item.id, lang=lang) }}">
+                    {{ item.name if lang == 'zh' else item.name_en }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+        <div class="alert alert-warning">
+            {% if lang == 'zh' %}未找到匹配的条目。{% else %}No items matched your search query.{% endif %}
+        </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{{ url_for('index', lang=lang) }}" class="btn btn-outline-secondary">
+            {% if lang == 'zh' %}返回主页{% else %}Back to Home{% endif %}
+        </a>
+    </div>
+</div>
+{% endblock %}

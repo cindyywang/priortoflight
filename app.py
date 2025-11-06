@@ -192,8 +192,8 @@ def search():
                   WHERE
                   name LIKE :term OR
                   name_en LIKE :term COLLATE NOCASE OR
-                  regulation LIKE :term OR
-                  regulation_en LIKE :term COLLATE NOCASE
+                  rrestrictions LIKE :term OR  {# <-- CHANGE: Use restrictions #}
+                  restrictions_en LIKE :term COLLATE NOCASE {# <-- CHANGE: Use restrictions_en #}
                 """),
             {"term": search_term}
         ).mappings().fetchall()

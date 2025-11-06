@@ -7,7 +7,7 @@
 <ul>
     {% for item in items %}
         <li>
-            <a href="{{ url_for('item_page', item_id=item.id, lang=lang) }}">
+            <a href="{{ url_for('item_detail', item_id=item.id, lang=lang) }}">
                 {{ item.name if lang=='zh' else item.name_en }}
             </a>
         </li>

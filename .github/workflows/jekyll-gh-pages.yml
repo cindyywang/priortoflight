@@ -22,20 +22,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Ruby with Bundler installed and gem caching
+      # 2. Set up Ruby and Bundler with caching
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2  # match your runner
-          bundler-cache: true  # caches gems between builds
+          ruby-version: 3.2
+          bundler-cache: true
 
-      # 3. Set up Python if your site needs it (optional)
+      # 3. Optional: Set up Python if any scripts/plugins need it
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
-      # 4. Install dependencies via Bundler
+      # 4. Install dependencies from Gemfile
       - name: Install Ruby dependencies
         run: bundle install
 
@@ -43,7 +43,7 @@ jobs:
       - name: Build Jekyll site
         run: bundle exec jekyll build --source ./ --destination ./_site
 
-      # 6. Upload the built site artifact
+      # 6. Upload built site as artifact
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

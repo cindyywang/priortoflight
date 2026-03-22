@@ -18,21 +18,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1. Checkout the repository
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Python if your site needs it (optional, safe)
+      # 2. Set up Ruby with Bundler installed and gem caching
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2  # match your runner
+          bundler-cache: true  # caches gems between builds
+
+      # 3. Set up Python if your site needs it (optional)
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
-      # 3. Set up GitHub Pages environment
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      # 4. Install Ruby dependencies via Bundler (no global gem install)
+      # 4. Install dependencies via Bundler
       - name: Install Ruby dependencies
         run: bundle install
 
@@ -40,7 +43,7 @@ jobs:
       - name: Build Jekyll site
         run: bundle exec jekyll build --source ./ --destination ./_site
 
-      # 6. Upload the built site as artifact for deployment
+      # 6. Upload the built site artifact
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

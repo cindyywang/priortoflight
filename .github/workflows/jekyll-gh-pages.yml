@@ -22,7 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up system Python (avoids missing /myenv/bin/python)
+      # 2. Set up Python if your site needs it (optional, safe)
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -32,16 +32,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # 4. Install Bundler and Jekyll dependencies
+      # 4. Install Ruby dependencies via Bundler (no global gem install)
       - name: Install Ruby dependencies
-        run: |
-          gem install bundler
-          bundle install
+        run: bundle install
 
       # 5. Build Jekyll site
       - name: Build Jekyll site
-        run: |
-          bundle exec jekyll build --source ./ --destination ./_site
+        run: bundle exec jekyll build --source ./ --destination ./_site
 
       # 6. Upload the built site as artifact for deployment
       - name: Upload Pages artifact
